@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+            <meta charset="UTF-8">
+            <title>商户管理</title>
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+            <script type="text/javascript" src="static/asset/js/jquery-3.3.1.min.js" ></script>
+            <meta name="format-detection" content="telephone=no">
+            <meta name="renderer" content="webkit">
+            <meta http-equiv="Cache-Control" content="no-siteapp"/>
+            <link rel="stylesheet" type="text/css" href="static/asset/css/p-css.css"/>
+    </head>
+    <body>
+        <div class="dp_box">
+            <div class="dp_left">
+                <div>
+                    <p><a href="data_search">数据查询</a></p>
+                </div>
+                <div>
+                    <p>赠送奖励</p>
+                </div>
+                <div>
+                    <p>代理权限</p>
+                </div>
+                <div>
+                    <p>收益管理</p>
+                </div>
+                <div>
+                    <p><a href="/announcement">游戏公告</a></p>
+                </div>
+                <div>
+                    <p><a href="/admin_center">管理中心</a></p>
+                </div>
+                <div>
+                    <p><a href="/business_admin">商户管理</a></p>
+                </div>
+            </div>
+        </div>
+        <!-- 左右分割线 -->
+        <div  id="right_content" class="dp_right">
+            <div class="dp_cj">
+                <h2 class="dp_bodb">按邀请码查询</h2>
+                <input type="text" id="search_code" placeholder="输入邀请码">
+                <button class=" dp_mars btn btn-large btn-block " type="button" onclick="remove_content();search_code();">查询</button>
+                <button class=" dp_mars btn btn-large btn-block " type="button" onclick="get_invite_code_list();">清空</button>
+                
+                <div class="lin1">
+                    <div class="gz11">邀请码</div>
+                    <div class="gz11">备注</div>
+                    <div class="gz11">总收益</div>
+                    <div class="gz11">可提现金额</div>
+                </div>
+                    <div class="bg" id="invite_list">
+                    </div> 
+                <div class="controls">
+                    <label class="control-label" for="inputcode">输入商户邀请码</label>
+                    <input type="text" id="take_code" placeholder="输入邀请码">
+                    <label class="control-label" for="inputmoney">输入提现金额</label>
+                    <input type="text" id="money" placeholder="输入提现金额">
+                    <button class=" dp_mars btn btn-large btn-block " type="button" onclick="take_money();">提现</button>
+                </div>     
+                
+            </div>
+            <div class="dp_cj">
+                <h2 class="dp_bodb">生成邀请码</h2>
+                <form class="form-horizontal">
+                    <div class="control-group">
+                        <label class="control-label" for="invitation_code">邀请码</label>
+                        <div class="controls">
+                            <input type="text" id="invitation_code" readonly="true" placeholder="邀请码">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="comment">备注</label>
+                        <div class="controls">
+                            <textarea class="" rows="5" id="invitation_comment" style="height:100px;width:400px;" ></textarea>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <button class=" dp_mars btn btn-large btn-block " type="button" onclick="create_code()">生成邀请码</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div> 
+        <script type="text/javascript">
+            function create_code()
+            {
+                content = document.getElementById("invitation_comment")
+                if(content.value == '')
+                {
+                    alert('备注不能为空')
+                }
+                // 填写备注
+                else
+                {
+                    json_data = {}
+                    json_data['comment'] = content.value
+                    jsonStr = JSON.stringify(json_data)
+
+                    $.ajax({
+                        url : "/create_code",
+                        type : 'POST',
+                        data : jsonStr,
+                        dataType : 'json',
+                        success: function (data) 
+                        {
+                            console.log(data)
+                            if (data.status_code == 0)
+                            {
+                                write_invitation_code(data)
+                                alert('生成邀请码成功！')
+                                get_invite_code_list()
+                                // 更新页面，追加最后一条信息
+                            }
+                        }
+                    })
+                }
+            }
+            function write_invitation_code(data)
+            {
+                document.getElementById('invitation_comment').value = data.comment
+                document.getElementById('invitation_code').value = data.invite_code      
+            }
+            // 刷新邀请码和备注
+            function remove_content()
+            {
+                if(document.getElementById("search_code").value=='')
+                {
+                    alert('请输入邀请码')
+                }
+                // 输入不能为空
+                else{  
+                    $.ajax({
+                        url : "/code_list",
+                        type : 'GET',
+                        dataType : 'json',
+                        success: function (data) 
+                        {
+                            // 有返回值的话，按照返回值长度，清空此处html
+                            if (data.status_code == 0)
+                            {
+                                for(i=0;i<data.content.length;i++)
+                                {
+                                    try
+                                    {
+                                        var parent=document.getElementById("invite_list");
+                                        var child=document.getElementById(String(i));
+                                        parent.removeChild(child);
+                                    }
+                                    catch
+                                    {
+
+                                    }
+                                }
+                                console.log('remove_done')
+                            }
+                        }
+                    })
+                }
+            }
+            // 查询邀请码
+            function search_code()
+            {
+                var request = { 
+                    code:document.getElementById("search_code").value,
+                };
+                var encoded = JSON.stringify(request)
+                var jsonStr = encoded
+                $.ajax({
+                    // 根据返回值重写html代码
+                    url : "/search_code",
+                    type : 'POST',
+                    data : jsonStr,
+                    dataType : 'json',
+                    success: function (data) 
+                    {
+                        
+                        if (data.status_code == 0)
+                        {
+                            console.log(data)
+                            console.log('creating!')
+                            var newdiv=document.createElement("div")
+                            newdiv.setAttribute('class','bg')
+                            newdiv.setAttribute('id','0')
+                            document.getElementById("invite_list").appendChild(newdiv)
+                            create_search(data)
+
+                            // document.getElementById('search_code').value = ''
+                            
+                        }
+                        document.getElementById('take_code').value = ''
+                        document.getElementById('money').value = ''    
+                    }
+                })
+            }
+            function create_search(data)
+            {
+
+                var newdiv=document.createElement("div")
+                newdiv.setAttribute('class','lin1')
+                newdiv.setAttribute('id','content0')
+                document.getElementById('0').appendChild(newdiv)
+
+                var newdiv=document.createElement("div") 
+                newdiv.setAttribute('class','gz112')
+                newdiv.textContent = data['code']
+                document.getElementById('content0').appendChild(newdiv)
+                
+
+                var newdiv=document.createElement("div")
+                newdiv.setAttribute('class','gz112')
+                newdiv.textContent = data['comment']
+                document.getElementById('content0').appendChild(newdiv)
+                
+
+                var newdiv=document.createElement("div")
+                newdiv.setAttribute('class','gz112')
+                newdiv.textContent = data['income']
+                document.getElementById('content0').appendChild(newdiv)
+
+                var newdiv=document.createElement("div")
+                newdiv.setAttribute('class','gz112')
+                newdiv.textContent = data['take']
+                document.getElementById('content0').appendChild(newdiv)
+            }
+            // 提现
+            function take_money()
+            {
+                var request = { 
+                    code:document.getElementById("take_code").value,
+                    money:document.getElementById("money").value,
+                };
+                if (request.code == ''){
+                    alert('邀请码不能为空！')
+                }
+                if (request.money == ''){
+                    alert('提现金额不能为空！')
+                }
+                // 别瞎几把乱点
+                else
+                {
+                    var encoded = JSON.stringify(request)
+                    var jsonStr = encoded
+                    $.ajax({
+                        // 发起提现请求
+                        url : "/take_money",
+                        type : 'POST',
+                        data : jsonStr,
+                        dataType : 'json',
+                        success: function (data) 
+                        {
+                            
+                            if (data.status_code == 0)
+                            {
+                                alert('提现成功')
+                                get_invite_code_list()
+                                // 就不需要重新访问了，直接刷新数据部分html就行了      
+                            }
+                            else
+                            {
+                                alert('别瞎搞！')
+                            }
+                            
+                        }
+                    })
+                }
+            }
+            function get_invite_code_list()
+            {
+                document.getElementById('search_code').value = ''
+                document.getElementById('take_code').value = ''
+                document.getElementById('money').value = ''
+                $.ajax({
+                    url : "/code_list",
+                    type : 'GET',
+                    dataType : 'json',
+                    success: function (data) 
+                    {
+                        console.log(data)
+                        if (data.status_code == 0){
+                            for(i=0;i<data.content.length;i++){
+                                try
+                                {
+                                    var parent=document.getElementById("invite_list");
+                                    var child=document.getElementById(String(i));
+                                    parent.removeChild(child);
+                                }
+                                // 请求数据的时候重新杀掉旧的数据
+                                catch
+                                {
+
+                                }
+                                create_every_single_line_html(data.content[i],i)
+                                console.log('create',data.content[i])
+                            }
+                        }
+                    }
+                })
+            }
+            // 初次登录请求
+            function create_every_single_line_html(data,i)
+            {
+                var newdiv=document.createElement("div")
+                newdiv.setAttribute('class','bg')
+                newdiv.setAttribute('id',String(i))
+                document.getElementById("invite_list").appendChild(newdiv)
+
+                var newdiv=document.createElement("div")
+                newdiv.setAttribute('class','lin1')
+                newdiv.setAttribute('id','content'+String(i))
+                document.getElementById(String(i)).appendChild(newdiv)
+
+                var newdiv=document.createElement("div")
+                newdiv.setAttribute('class','gz112')
+                newdiv.textContent = data['code']
+                document.getElementById('content'+String(i)).appendChild(newdiv)
+
+                var newdiv=document.createElement("div")
+                newdiv.setAttribute('class','gz112')
+                newdiv.textContent = data['comment']
+                document.getElementById('content'+String(i)).appendChild(newdiv)
+
+                var newdiv=document.createElement("div")
+                newdiv.setAttribute('class','gz112')
+                newdiv.textContent = data['income']
+                document.getElementById('content'+String(i)).appendChild(newdiv)
+
+                var newdiv=document.createElement("div")
+                newdiv.setAttribute('class','gz112')
+                newdiv.textContent = data['take']
+                document.getElementById('content'+String(i)).appendChild(newdiv)
+                // 填写新的html代码
+            }
+            get_invite_code_list()
+            // 当访问这个页面的时候，自动向服务器请求数据
+        </script>        
+    </body>
+</html>

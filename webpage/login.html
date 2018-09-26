@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>这是后台管理系统</title>
+    <script type="text/javascript" src="static/asset/js/jquery-3.3.1.min.js" ></script>
+</head>
+    <body>
+        <h1 style="text-align: center;">👉 后台</h1>
+        <h2 style="text-align: center;">👉 请先登录</h2>
+        <div style="text-align: center;">
+            <script type="text/javascript">
+                var isShow=true;
+                function change()
+                {
+                    var v=document.getElementById("password");
+                    if (isShow) 
+                    {
+                        v.type="text";
+                        isShow=false;
+                    }
+                    else
+                    {
+                        v.type="password";
+                        isShow=true;
+                    }
+                };
+                // 复选框拿来实现显示密码与否
+                function login() 
+                {
+                    var request = { 
+                            username:document.getElementById("username").value,
+                            password:document.getElementById("password").value,
+                    };
+                    //调用了jquery.json 库
+                    var encoded = JSON.stringify(request);
+                    var jsonStr = encoded;
+                    $.ajax({
+                        url : "/login",
+                        type : 'POST',
+                        data : jsonStr,
+                        dataType : 'json',
+                        //contentType : 'application/json',
+                        success: function (data) 
+                        {
+                            // result = data;
+                            if(data.status_code != "0")
+                            {
+                                alert('用户名或密码不存在');
+                            }
+                            else
+                            {
+                                window.location.href ="/business_admin";
+                            }
+                        }
+                    });
+                };
+
+            </script>
+            账号: 
+            <input id="username" type="text" name="username"/>
+            <br/>
+            密码: 
+            <input id="password" type="password" name="password"/>
+            <br/>
+            <label>
+                <input onclick="change()" name="print_password" type="checkbox" value=""/>
+                显示密码
+            <!-- 登录功能 -->
+            </label> 
+            <br/>
+            <input type="submit" value="登录" onclick="login()"/>
+        </div>
+        <p style="text-align: center;"><font size="1" color="red" >v2.71828182845</font></p>
+    </body>
+</html>

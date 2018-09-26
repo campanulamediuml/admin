@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+            <meta charset="UTF-8">
+            <title>数据查询</title>
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+            <script type="text/javascript" src="static/asset/js/jquery-3.3.1.min.js" ></script>
+            <meta name="format-detection" content="telephone=no">
+            <meta name="renderer" content="webkit">
+            <meta http-equiv="Cache-Control" content="no-siteapp"/>
+            <link rel="stylesheet" type="text/css" href="static/asset/css/p-css.css"/>
+    </head>
+    <body>
+        <div class="dp_box">
+            <div class="dp_left">
+                <div>
+                    <p><a href="data_search">数据查询</a></p>
+                </div>
+                <div>
+                    <p>赠送奖励</p>
+                </div>
+                <div>
+                    <p>代理权限</p>
+                </div>
+                <div>
+                    <p>收益管理</p>
+                </div>
+                <div>
+                    <p><a href="/announcement">游戏公告</a></p>
+                </div>
+                <div>
+                    <p><a href="/admin_center">管理中心</a></p>
+                </div>
+                <div>
+                    <p><a href="/business_admin">商户管理</a></p>
+                </div>
+            </div>
+        </div>
+        <div  id="online_people" class="dp_right">
+            <script>
+                function get_online_people(data){
+                    var newdiv=document.createElement("div")
+                    newdiv.setAttribute('id','online_people_number')
+                    newdiv.setAttribute('name','online_people_number')
+                    newdiv.textContent = '当前在线人数'+String(data)
+                    document.getElementById("online_people").appendChild(newdiv)
+
+                }
+
+                function get_online_room(data){
+                    var newdiv=document.createElement("div")
+                    newdiv.setAttribute('id','online_room_number')
+                    newdiv.setAttribute('name','online_room_number')
+                    newdiv.textContent = '当前在线房间数'+String(data)
+                    document.getElementById("online_people").appendChild(newdiv)
+
+                }
+
+
+                function get_data(){
+                    $.ajax({
+                        url : "/online_people",
+                        type : 'GET',
+                        dataType : 'json',
+                        success: function (data) 
+                        {
+                            if (data.status_code == 0)
+                            {
+                                console.log(data)
+                                get_online_people(data.online_people)
+                                get_online_room(data.online_room)
+                            }
+                        }
+                    })
+                }
+
+                get_data()
+            </script>
+
+        </div>
+    </body>
+</html>

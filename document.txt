@@ -1,0 +1,51 @@
+主程序入口：admin/server/main.py
+python版本3.6
+
+#status_code=0:成功
+
+
+1，登录接口
+    8888/login
+    字段：username，password
+    返回值：{"status_code","content"}
+
+2，添加用户接口
+    8888/add_admin
+    字段：add_admin_name,add_admin_password
+    返回值：{"status_code","content"}
+
+3，刷新用户权限
+    8888/refresh_admin_center
+    字段：[{"username":a_1,"power":a_2},{"username":b_1,"power":b_2},{"username":c_1,"power":c_2}]
+    返回值：{"status_code","content"}
+
+4，访问用户管理界面
+    8888/admin_list
+    get接口
+    返回值：html文档
+
+5，访问管理中心
+	8888/admin_center
+	get接口
+	返回值：html文档
+
+6，访问数据搜索页面
+	8888/data_search
+	get接口
+	返回值：html文档
+
+7，访问公告页面
+	8888/announcement
+	get接口
+	返回值：html文档
+
+8，提交公告接口
+	8888/refresh_announcement
+	字段：{"content":"公告内容"}
+	返回值：{"status_code","content"}
+
+9，获取公告内容
+	8888/get_announcement
+	get接口
+	返回值：{"content":公告内容}
+

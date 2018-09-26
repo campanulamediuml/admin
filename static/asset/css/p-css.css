@@ -1,0 +1,181 @@
+/* Write your styles */
+ul li{list-style-type:none}
+.pad-10{ margin-top:5%}
+.bord-b{ border-bottom:1px dashed #fff;}
+.ov-h{ overflow:hidden;}
+.padl-3{ padding:0 2%}
+.marl-3{ margin:0 1.5%}
+.bg-ed{ background:#ededed;}
+.txtc{ text-align:center}
+.bor{ border:1px solid #ccc;}
+.img100{ width:100%; height:100%}
+.max-h{ max-height:110px;}
+ 
+.in-logo{ width:20%; float:left; padding-top:1%}
+.nomar{ margin:0}
+.in-logo img{width:100%; height:100%}
+.in-top {  background: #fff;}
+.in-nav{ padding-top:3%}
+ @media only screen and (min-width: 641px) {
+      .in-nav{ padding-top:3.5%
+      }}
+ @media only screen and (max-width: 640px) {
+      .in-nav{ padding-top:2%
+      }}
+
+.txt-c{ text-align:center;} 
+
+.in-de{ margin:6% 0;}
+.in-de ul{ padding:0; margin:0}
+.in-de ul li{width: 16%; float:left; margin:0 4.5%}
+.in-de ul li .top{  border:1px solid #ccc; border-radius:50%;}
+.in-de ul li .top:hover{ background:#01A7DB;}
+.in-de ul li p{ text-align:center; font-size:1.5rem;}
+.in-de ul li img{ width:100%; height:100%; padding:18%}
+
+
+.in-pro{ margin:6% 0}
+.in-pro ul{ padding:0;}
+.in-pro ul li{text-align:center; margin:3% 0}
+.in-pro ul li:hover{border:#33c 1px solid;}
+.in-pro ul li .bot h1{ font-size:14px;}
+.in-pro ul li .bot h2{ font-size:20px; color:#F60; margin:0}
+.in-fot{ background:#333; clear:both;} 
+.in-fot h1{ text-align:center; font-size:12px; line-height:20px; padding:30px 0; color:#666; margin:0} 
+
+
+.pad-3{ padding:3% 0;}
+
+.up{ width:30%; margin:3% 0} 
+.up img{width:100%; height:100%}
+
+    @media only screen and (min-width: 641px) {
+      .am-offcanvas {
+        display: block;
+        position: static;
+        background: none;
+      }
+
+      .am-offcanvas-bar {
+        position: static;
+        width: auto;
+        background: none;
+        -webkit-transform: translate3d(0, 0, 0);
+        -ms-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+      }
+      .am-offcanvas-bar:after {
+        content: none;
+      }
+
+    }
+
+    @media only screen and (max-width: 640px) {
+      .am-offcanvas-bar .am-nav>li>a {
+        color:#ccc;
+        border-radius: 0;
+        border-top: 1px solid rgba(0,0,0,.3);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,.05)
+      }
+
+      .am-offcanvas-bar .am-nav>li>a:hover {
+        background: #404040;
+        color: #fff
+      }
+
+      .am-offcanvas-bar .am-nav>li.am-nav-header {
+        color: #777;
+        background: #404040;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,.05);
+        text-shadow: 0 1px 0 rgba(0,0,0,.5);
+        border-top: 1px solid rgba(0,0,0,.3);
+        font-weight: 400;
+        font-size: 75%
+      }
+
+      .am-offcanvas-bar .am-nav>li.am-active>a {
+        background: #1a1a1a;
+        color: #fff;
+        box-shadow: inset 0 1px 3px rgba(0,0,0,.3)
+      }
+
+      .am-offcanvas-bar .am-nav>li+li {
+        margin-top: 0;
+      }
+    }
+
+    .my-head {
+      margin-top: 40px;
+      text-align: center;
+    }
+
+    .my-button {
+      position: fixed;
+      top: 0;
+      right: 0;
+      border-radius: 0;
+    }
+    .my-sidebar {
+      padding-right: 0;
+      border-right: 1px solid #eeeeee;
+    }
+
+    .my-footer {
+      border-top: 1px solid #eeeeee;
+      padding: 10px 0;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+.sd-nav{ background:#2F9FD8; padding:3%; margin-bottom:3%}
+.sd-nav a{ color:#fff;}
+
+.ord-de .top{ background:#ededed; overflow:hidden; padding:1%; line-height:40px; font-size:1.2rem; border:1px solid #ccc;}
+.ord-de .cent { border:1px solid #ccc;}
+.ord-de .cent ul{ padding:0}
+.ord-de .cent ul li{ margin:2% ; height:40px; border-bottom:1px dashed #ccc;font-size:1.2rem}
+.ord-de .cent ul li span{ float:right; padding-right:2%}
+
+.ord-de .cent ul li p{  padding-top:1%}
+.ord-de .cent ul li img{ height:80% !important; }
+.ord-de .cent ul li a:hover{ color:#f30 !important}
+
+.search{ padding:1% 0 0 0; background:#ededed;}
+
+.pr-de h1{ font-size:2rem; padding:2% 0; border-bottom:1px #ccc dashed;}
+.pr-de h2{ padding:2% 0; font-size:1.5rem; font-weight:normal  }
+.pr-de h2 span{font-size:24px; color:#F60;}
+.pr-de .buy{ padding:3%}
+.pr-de .buy .buy-b{ float:left; height:40px; width:100px; background:#ff9500; width:100px; text-align:center; color:#fff; line-height:40px }
+.pr-de .buy .buy-b:hover{ background:#F60}
+.pr-de .buy .buy-b a{ color:#FFF}
+.pr-de .buy ul{ padding:0; float:left;}
+.pr-de .buy ul li{ background:#fff; width:60px; height:34px; float:left; margin-right:10px;border:#ccc 1px solid; text-align:center; line-height:27px;}
+.pr-de  .buy ul li a{ display:block; font-size:18px;}
+.pr-de .buy ul li a:hover{color:#fff}
+.pr-de .buy ul li:hover{ background:#f60; color:#fff}
+
+.pr-ed-atc h1{ font-size:2rem; border-top:1px dashed #ccc;}
+
+
+
+.dp_bodb{ border-bottom: 1px #ccc solid; }
+.dp_mar{ margin-right: 20px;}
+.dp_mars{ margin: 20px 0;}
+.dp_box{ padding:0 20px}
+.dp_left{ width: 300px; float: left; background: #f1f1f1; height: 500px;}
+.dp_right{ margin-left: 320px;  }
+.dp_right h4{ padding: 20px 0 ;; display: block}
+
+.dp_cj{ padding: 20px; margin-top: 20px;}
+.dp_col{ background: #0088cc; color: #fff;}
+
+
+
+
+/*.dp_bodb span{ float: right}*/
+.lin1{ line-height: 20px; font-size: 15px;}
+
+.gz11{ width: 25%; text-align: center; float: left; font-size: 20px;font-weight:bold;border-bottom: 1px #ccc solid;}
+
+.gz112{ width: 25%; text-align: center; float: left; }

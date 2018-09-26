@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+            <meta charset="UTF-8">
+            <title>商家收益管理</title>
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+            <script type="text/javascript" src="static/asset/js/jquery-3.3.1.min.js" ></script>
+            <meta name="format-detection" content="telephone=no">
+            <meta name="renderer" content="webkit">
+            <meta http-equiv="Cache-Control" content="no-siteapp"/>
+            <link rel="stylesheet" type="text/css" href="static/asset/css/p-css.css"/>
+    </head>
+    <body>
+        <div class="dp_box">
+            <div class="dp_left">
+                <div>
+                    <p><a href="/invitation">商家收益管理</a></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="dp_right" id = "content">
+            <div class="dp_cj" id="child_content"> 
+                <h2 class="dp_bodb">请输入邀请码</h2>
+                <input type="text" id="search_code" placeholder="输入邀请码">
+                <button class=" dp_mars btn btn-large btn-block " type="button" onclick="search_code();">查询</button>
+                <p>请输入要查询的邀请码，查询该邀请码的总收益（不区分大小写）</p>
+            </div> 
+        </div>
+        <script type="text/javascript">
+            function search_code(){
+                var request = { 
+                    invitation_code:document.getElementById("search_code").value,
+                };
+                var encoded = JSON.stringify(request)
+                var jsonStr = encoded
+                $.ajax({
+
+                    url : "/invitation_detail",
+                    type : 'POST',
+                    data : jsonStr,
+                    dataType : 'json',
+                    success: function (data) 
+                    {  
+                        if (data.status_code == 0)
+                        {
+                            console.log(data)
+                            write_html_header(data.code)
+                            for(i=0;i<data.content.length;i++)
+                            {
+                                write_html_by_line(data.content[i],i)
+                            }
+                        }
+                        if (data.status_code == 1)
+                        {
+                            alert('邀请码不存在')
+                        }   
+                    }
+                })
+            }
+            function user_cookies()
+            {
+                $.ajax({
+                    url : "/is_user",
+                    type : 'GET',
+                    // data : jsonStr,
+                    dataType : 'json',
+                    success: function (data) 
+                    { 
+                        if (data.status_code == 0)
+                        {
+                            console.log(data)
+                            user_cookie(data.code)
+                        }
+                        else
+                        {
+                            console.log('no cookie')
+                        }
+                    }
+                })
+            }
+            function user_cookie(code)
+            {
+                var request = { 
+                    invitation_code:code,
+                };
+                var encoded = JSON.stringify(request)
+                var jsonStr = encoded
+                $.ajax({
+
+                    url : "/invitation_detail",
+                    type : 'POST',
+                    data : jsonStr,
+                    dataType : 'json',
+                    success: function (data) 
+                    {   
+                        if (data.status_code == 0)
+                        {
+                            console.log(data)
+                            write_html_header(data.code)
+                            for(i=0;i<data.content.length;i++)
+                            {
+                                write_html_by_line(data.content[i],i)
+                            }
+                        }
+                        if (data.status_code == 1)
+                        {
+                            alert('邀请码不存在')
+                        } 
+                    }
+                })
+            }
+            user_cookies()
+            function write_html_header(code)
+            {
+                var parent=document.getElementById("content");
+                var child=document.getElementById("child_content");
+                parent.removeChild(child)
+
+                var newdiv=document.createElement("div")
+                newdiv.setAttribute('class','dp_cj')
+                newdiv.setAttribute('id','content_box')
+                document.getElementById("content").appendChild(newdiv)
+
+                var name = document.createElement("h2")
+                name.setAttribute('class','dp_bodb')
+                name.textContent = '收益详情'
+                document.getElementById("content_box").appendChild(name)
+
+                var name = document.createElement("h4")
+                name.textContent = '你输入的邀请码为：'+code
+                document.getElementById("content_box").appendChild(name)
+
+                var newdiv=document.createElement("div")
+                newdiv.setAttribute('class','gz11')
+                newdiv.textContent = 'uuid'
+                document.getElementById("content_box").appendChild(newdiv)
+
+                var newdiv=document.createElement("div")
+                newdiv.setAttribute('class','gz11')
+                newdiv.textContent = '充值金额'
+                document.getElementById("content_box").appendChild(newdiv)
+
+                var newdiv=document.createElement("div")
+                newdiv.setAttribute('class','gz11')
+                newdiv.textContent = '充值日期'
+                document.getElementById("content_box").appendChild(newdiv)
+
+                var newdiv=document.createElement("div")
+                newdiv.setAttribute('class','gz11')
+                newdiv.textContent = '商品类型'
+                document.getElementById("content_box").appendChild(newdiv)
+
+                var newdiv=document.createElement("div")
+                newdiv.setAttribute('class','bg')
+                newdiv.setAttribute('id','content_main')
+                document.getElementById("content_box").appendChild(newdiv)
+            }
+            function write_html_by_line(data,i)
+            {
+                var newdiv=document.createElement("div")
+                newdiv.setAttribute('class','bg')
+                newdiv.setAttribute('id',String(i))
+                document.getElementById("content_main").appendChild(newdiv)
+
+                var newdiv=document.createElement("div")
+                newdiv.setAttribute('class','lin1')
+                newdiv.setAttribute('id','content'+String(i))
+                document.getElementById(String(i)).appendChild(newdiv)
+
+                var newdiv=document.createElement("div")
+                newdiv.setAttribute('class','gz112')
+                newdiv.textContent = data['uuid']
+                document.getElementById('content'+String(i)).appendChild(newdiv)
+
+                var newdiv=document.createElement("div")
+                newdiv.setAttribute('class','gz112')
+                newdiv.textContent = data['money']
+                document.getElementById('content'+String(i)).appendChild(newdiv)
+
+                var newdiv=document.createElement("div")
+                newdiv.setAttribute('class','gz112')
+                newdiv.textContent = data['time']
+                document.getElementById('content'+String(i)).appendChild(newdiv)
+
+                var newdiv=document.createElement("div")
+                newdiv.setAttribute('class','gz112')
+                newdiv.textContent = data['good']
+                document.getElementById('content'+String(i)).appendChild(newdiv)
+                // 填写新的html代码
+            }
+        </script>
+    </body>
+</html>

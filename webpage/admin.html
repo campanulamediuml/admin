@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+            <meta charset="UTF-8">
+            <title>管理中心</title>
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+            <script type="text/javascript" src="static/asset/js/jquery-3.3.1.min.js" ></script>
+            <meta name="format-detection" content="telephone=no">
+            <meta name="renderer" content="webkit">
+            <meta http-equiv="Cache-Control" content="no-siteapp"/>
+            <link rel="stylesheet" type="text/css" href="static/asset/css/p-css.css"/>
+    </head>
+    <body>
+        <div class="dp_box">
+            <div class="dp_left">
+                <div>
+                    <p><a href="data_search">数据查询</a></p>
+                </div>
+                <div>
+                    <p>赠送奖励</p>
+                </div>
+                <div>
+                    <p>代理权限</p>
+                </div>
+                <div>
+                    <p>收益管理</p>
+                </div>
+                <div>
+                    <p><a href="/announcement">游戏公告</a></p>
+                </div>
+                <div>
+                    <p><a href="/admin_center">管理中心</a></p>
+                </div>
+                <div>
+                    <p><a href="/business_admin">商户管理</a></p>
+                </div>
+            </div>
+        </div>
+        <div class="dp_right">
+            <div class="dp_cj" id="admin_power_sheet_parent">
+                <h2 class="dp_bodb">权限设置</h2>
+                <script type="text/javascript">
+                    function get_data(){
+                        $.ajax({
+                            url : "/admin_list",
+                            type : 'GET',
+                            dataType : 'json',
+                            success: function (data) 
+                            {
+                                if (data.status_code == 0)
+                                {
+                                    console.log(data)
+                                    create_html_content(data.content)
+                                }
+                            }
+                        })
+
+                    }
+                    // 通过ajax获取请求，把请求结果变成html代码
+
+                    function create_html_content(admin_power_json){
+                        // admin_power_list = get_data()
+                        // console.log(admin_power_json)
+                        // console.log(admin_power_json.length)
+
+                        var newdiv=document.createElement("div")
+                        newdiv.setAttribute('id','admin_power_sheet')
+                        newdiv.setAttribute('name','admin_power_sheet')
+                        document.getElementById("admin_power_sheet_parent").appendChild(newdiv)
+                        // 先创建一个div，用来填写所有用户权限
+
+                        power_index_label = ['数据查询','收益提现','赠送奖励','代理设置','收益管理','公告发布','管理中心']
+                        power_id_label = ['a','b','c','d','e','f','g']
+                        // 这边就做个列表拿来用
+
+                        for(i=0;i<admin_power_json.length;i++)
+                        {
+                            var admin_name = document.createElement("div")
+                            admin_name.setAttribute('id',String(i))
+                            admin_name.setAttribute('name','admin_name')
+
+                            document.getElementById("admin_power_sheet").appendChild(admin_name)
+                            // 添加一个子类div，div内容为一个用户名+全部权限
+                            var name = document.createElement("h3")
+                            name.textContent = admin_power_json[i].username
+                            document.getElementById(String(i)).appendChild(name)
+                            // 添加用户名
+                            // 遍历每个用户名，填写用户名到html结构中
+
+                            for(j=0;j<admin_power_json[i].power.length;j++)
+                            {
+                                if(admin_power_json[i].power[j]=='0')
+                                {
+                                    newlabel = document.createElement("label")
+                                    newlabel.setAttribute('id',power_id_label[j]+String(i))
+                                    newlabel.textContent = '\t'+power_index_label[j]
+                                    document.getElementById(String(i)).appendChild(newlabel)
+                                    newbox = document.createElement("input")
+                                    newbox.setAttribute('type','checkbox')
+                                    newbox.setAttribute('name','box')
+                                    newbox.setAttribute('value','')
+                                    document.getElementById(power_id_label[j]+String(i)).appendChild(newbox)
+                                    // 添加位置需要注意区分
+                                    
+                                }
+                                // 如果没有对应的权限，那就不打钩了
+                                else
+                                {
+                                    newlabel = document.createElement("label")
+                                    newlabel.setAttribute('id',power_id_label[j]+String(i))
+                                    newlabel.textContent = '\t'+power_index_label[j]
+                                    document.getElementById(String(i)).appendChild(newlabel)
+                                    newbox = document.createElement("input")
+                                    newbox.setAttribute('type','checkbox')
+                                    newbox.setAttribute('name','box')
+                                    newbox.setAttribute('value','')
+                                    newbox.setAttribute('checked','True')
+                                    document.getElementById(power_id_label[j]+String(i)).appendChild(newbox)
+                                    // 注意这个添加位置
+                                // 有对应的权限就在复选框上打钩
+                                }
+                            }
+
+                        }
+                    }
+                    get_data()
+                    // 进入页面以后先请求数据
+
+                </script>
+                <div class="controls">
+                    <button class="dp_mars btn btn-large btn-block " type="button" onclick="refresh()" >刷新权限</button>
+                </div>
+            </div>
+        
+                   
+            <script type="text/javascript">
+                function if_check()
+                {   
+                    var admin_name_list = document.getElementsByName("admin_name")
+                    // 取得包含用户名和用户权限的标签列表
+                    var admin_power_list = []
+                    for(var i=0;i<admin_name_list.length;i++)
+                    {
+                        // 遍历标签列表，拼接权限和用户名
+                        var power_sheet = admin_name_list[i].getElementsByTagName('input')      
+                        var power_string = ""
+                        for(var j=0;j<power_sheet.length;j++){
+                            if(power_sheet[j].checked)
+                            {
+                                power_string = power_string+"1"
+                            }
+                            else
+                            {
+                                power_string = power_string+"0"
+                            }
+                        }
+                        var admin_name = $(admin_name_list[i].getElementsByTagName("h3")[0]).text()
+                       
+                        // 获取管理员账号用户名
+                        admin_dict = {}
+                        admin_dict["username"]=admin_name
+                        admin_dict["power"] = power_string
+                        // 拼接一个json字典
+                        admin_power_list.push(admin_dict)
+                    }
+                    var post_json
+                    var post_json = JSON.stringify(admin_power_list) 
+                    return post_json  
+                }
+                
+                function refresh()
+                {
+                    // 提交并保存刷新
+                    post_json = if_check() 
+                    $.ajax({
+                        url : "/refresh_admin",
+                        type : 'POST',
+                        data : post_json,
+                        dataType : 'json',
+                        success: function (data) 
+                        {
+                            result = data
+                            if(data.status_code == "0")
+                            {
+                                alert('刷新成功')
+                                window.location.href ="/admin_center"
+                                // 刷新成功后重定向
+                            }
+                            
+                        }
+                    })
+                }
+                function upload_admin()
+                {
+                    var request = { 
+                            add_admin_name:document.getElementById("username").value,
+                            add_admin_password:document.getElementById("password").value,
+                        };
+                    var encoded = JSON.stringify(request);
+                    var jsonStr = encoded;
+                    $.ajax({
+                        url : "/add_admin",
+                        type : 'POST',
+                        data : jsonStr,
+                        dataType : 'json',
+                        //contentType : 'application/json',
+                        success: function (data) 
+                        {
+                            // result = data;
+                            if(data.status_code == "1")
+                            {
+                                alert('权限不足，需要更多的高能瓦斯');
+                            }
+                            else if(data.status_code == "-1")
+                            {
+                                alert('用户存在了');
+                            }
+                            else
+                            {
+                                alert('添加成功')
+                                window.location.href ="/admin_center"    
+                            }
+                        }
+                    });
+                }
+                var isShow=true;
+                function change()
+                {
+                    var v=document.getElementById("password");
+                    if (isShow) 
+                    {
+                        v.type="text";
+                        isShow=false;
+                    }
+                    else
+                    {
+                        v.type="password";
+                        isShow=true;
+                    }
+                };
+                
+            </script>
+
+        
+            <div class="dp_cj">
+                <form class="form-horizontal">
+                    <div class="control-group">
+                        <label class="control-label" for="inputEmail">要创建的账号</label>
+                        <div class="controls">
+                            <input type="text" id="username" placeholder="要创建的账号">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="inputPassword">密码</label>
+                        <div class="controls">
+                            <input type="password" id="password" placeholder="密码">
+                        </div>
+                        <label>
+                            <input onclick="change()" name="print_password" type="checkbox" value=""/>
+                            显示密码
+                        </label> 
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <button class=" dp_mars btn btn-large btn-block " type="button" onclick="upload_admin()">创建账号</button>
+                        </div>
+                    </div>
+                </form>    
+            </div>
+        </div>
+    </body>
+</html>

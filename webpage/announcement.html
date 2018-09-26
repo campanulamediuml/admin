@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+            <meta charset="UTF-8">
+            <title>游戏公告</title>
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+            <script type="text/javascript" src="static/asset/js/jquery-3.3.1.min.js" ></script>
+            <meta name="format-detection" content="telephone=no">
+            <meta name="renderer" content="webkit">
+            <meta http-equiv="Cache-Control" content="no-siteapp"/>
+            <link rel="stylesheet" type="text/css" href="static/asset/css/p-css.css"/>
+    </head>
+    <body>
+        <div class="dp_box">
+            <div class="dp_left">
+                <div>
+                    <p><a href="data_search">数据查询</a></p>
+                </div>
+                <div>
+                    <p>赠送奖励</p>
+                </div>
+                <div>
+                    <p>代理权限</p>
+                </div>
+                <div>
+                    <p>收益管理</p>
+                </div>
+                <div>
+                    <p><a href="/announcement">游戏公告</a></p>
+                </div>
+                <div>
+                    <p><a href="/admin_center">管理中心</a></p>
+                </div>
+                <div>
+                    <p><a href="/business_admin">商户管理</a></p>
+                </div>
+            </div>
+        </div>
+        <div class="dp_right">
+            <div class="dp_cj">
+                <h2 class="dp_bodb">公告</h2>
+                <h3 class="">输入公告内容 实时生效</h3>
+                <div class="am-form-group">
+                    <textarea class="" rows="5" id="doc-ta-new" style="height:100px;width:400px;"></textarea>
+                </div>
+                <p>
+                    <script>
+                        function get_announcement()
+                        {
+                            $.ajax({
+                                url : "/get_announcement",
+                                type : 'GET',
+                                dataType : 'json',
+                                success: function (data) 
+                                {
+                                    console.log(data)
+                                    if (data.status_code == 0)
+                                    {
+                                        create_html_content(data.content)
+                                    }
+                                }
+                            })
+                        }
+                        // 获取到现在存在服务器中的公告内容
+                        function create_html_content(data)
+                        {
+                            content = document.getElementById('doc-ta-old')
+                            content.value = data
+                        }
+                        // 生成html页面内容，刷新旧公告
+
+                        function get_broadcast()
+                        {
+                            $.ajax({
+                                url : "/get_broadcast",
+                                type : 'GET',
+                                dataType : 'json',
+                                success: function (data) 
+                                {
+                                    console.log(data)
+                                    if (data.status_code == 0)
+                                    {
+                                        broadcast_data(data)
+                                    }
+                                }
+                            })
+                        }
+                        function broadcast_data(data)
+                        {
+                            document.getElementById('broadcast').value = data['content']
+                            document.getElementById('repeat').value = data['repeat_time']
+                            document.getElementById('broadcast_time').value = data['broadcast_time']
+
+                        }
+                        get_announcement()
+                        get_broadcast()
+
+                        function refresh()
+                        {
+                            content = document.getElementById("doc-ta-new")
+                            json_data = {}
+                            json_data['content'] = content.value
+                            jsonStr = JSON.stringify(json_data)
+                            $.ajax({
+                                url : "/refresh_announcement",
+                                type : 'POST',
+                                data : jsonStr,
+                                dataType : 'json',
+                                //contentType : 'application/json',
+                                success: function (data) 
+                                {
+                                    // result = data;
+                                    // console.log(data)
+                                    // 判断返回值，进行对应操作
+                                    if(data.status_code == 1)
+                                    {
+                                        alert('公告更新失败，权限不足，需要更多高能瓦斯');
+                                    }
+                                    else if(data.status_code == 0)
+                                    {
+                                        alert('公告更新成功')
+                                        window.location.href ="/announcement";
+                                    }
+                                    else
+                                    {
+                                        alert('大兄弟，别啥都没输入还乱点啊……')
+                                    }
+                                }
+                            })
+
+                        }
+                        // 更新公告
+                    </script>
+                    <button type="submit" class="am-btn am-btn-default" onclick="refresh()">提交</button>
+                </p >
+                <h3 class="">原公告内容</h3>
+                <div class="am-form-group">
+                    <textarea class="" rows="5" id="doc-ta-old" readonly="true" style="height:100px;width:400px;" ></textarea>
+                </div>
+
+                <h2 class="dp_bodb">广播</h2>
+                <div class="am-form-group">
+                    <textarea class="" rows="5" id="broadcast" style="height:100px;width:400px;" ></textarea>
+                    <div class="control-group">
+                        <label class="control-label" for="broadcast_time">持续时间(秒)</label>
+                            <input onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"id="broadcast_time" placeholder="持续时间">
+                        <label class="control-label" for="repeat">间隔时间(秒)</label>
+                            <input onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" id="repeat" placeholder="间隔时间">
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <button class=" dp_mars btn btn-large btn-block " type="button" onclick="send_broadcast()">提交广播</button>
+                        </div>
+                    </div>
+
+                    <script>
+                        function send_broadcast()
+                        {
+                            content = document.getElementById("broadcast")
+                            json_data = {}
+                            json_data['content'] = content.value
+                            content = document.getElementById("broadcast_time")
+                            json_data['broadcast_time'] = content.value
+                            content = document.getElementById("repeat")
+                            json_data['repeat'] = content.value
+
+                            jsonStr = JSON.stringify(json_data)
+                            $.ajax({
+                                url : "/send_broadcast",
+                                type : 'POST',
+                                data : jsonStr,
+                                dataType : 'json',
+                                //contentType : 'application/json',
+                                success: function (data) 
+                                {
+                                    // result = data;
+                                    // console.log(data)
+                                    // 判断返回值，进行对应操作
+                                    if(data.status_code == 1)
+                                    {
+                                        alert('广播更新失败，你是不是往里面乱写东西啊');
+                                    }
+                                    else if(data.status_code == 0)
+                                    {
+                                        alert('广播更新成功')
+                                        window.location.href ="/announcement";
+                                    }
+                                    else
+                                    {
+                                        alert('大兄弟，别啥都没输入还乱点啊……')
+                                    }
+                                }
+                            })
+
+                        }
+                        
+
+                    
+                    </script>
+
+                </div>
+            </div>
+
+        </div>
+    </body>
+</html>
